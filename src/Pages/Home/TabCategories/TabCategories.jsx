@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import TabCart from './TabCart';
+import axios from 'axios';
 
 const TabCategories = () => {
     const [jobs, setJobs] = useState([])
+    console.log(jobs);
+    
+    // useEffect(()=>{
+    //    fetch('http://localhost:5000/jobs')
+    //   .then(res => res.json())
+    //   .then(data => setJobs(data))
+    // },[])
+
+    useEffect(()=>{
+       axios(`${import.meta.env.VITE_API_URL}/jobs`)
+      .then(res => setJobs(res.data))
+    },[])
+    
+
+ 
+    
     return (
      <div className='my-6'>
               <div>
