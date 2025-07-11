@@ -23,7 +23,7 @@ const TabCategories = () => {
  
     
     return (
-     <div className='my-6'>
+     <div className='my-6 container  mx-auto'>
               <div>
                  <h2 className=' text-2xl font-semibold text-gray-800 text-center'>Brows Jobs By Categories</h2>
                  <p className=' max-w-2xl mx-auto my-6 text-gray-500 text-center'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut aliquid inventore eveniet quas, sunt sed dolorum totam optio perferendis placeat.</p>
