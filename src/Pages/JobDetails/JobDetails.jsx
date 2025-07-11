@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 
 const JobDetails = () => {
     const {user} = useContext(AuthContext)
     const jobData = useLoaderData();
-    console.log(jobData);
+    const navigate = useNavigate();
     
     const [startDate, setStartDate] = useState(new Date());
     const {category, deadline, job_title, description, min_price, max_price, _id , buyer } = jobData || {}
@@ -18,6 +19,7 @@ const JobDetails = () => {
         const form = e.target;
         if(user?.email === buyer.email) return alert('sorry')
         const job_id = _id;
+
         const price = parseFloat(form.price.value);
         if(price < parseFloat(min_price)) return alert('offer more')
         const comment = form.comment.value;
@@ -25,6 +27,7 @@ const JobDetails = () => {
         // const buyer_email = buyer.email;
         const status = 'Pending';
         const deadline = startDate;
+
         const bidData = {
             job_id,
             price,
@@ -37,6 +40,12 @@ const JobDetails = () => {
             buyer
         }
         console.log(bidData);
+        axios.post(`${import.meta.env.VITE_API_URL}/bid`, bidData)
+        .then(res => {
+                if(res.data.insertedId)
+                alert('successful')
+                navigate('/')
+        })
     }
 
     return (

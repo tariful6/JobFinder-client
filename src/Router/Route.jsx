@@ -6,6 +6,9 @@ import SignIn from "../Pages/Forms/SignIn";
 import SignUp from "../Pages/Forms/SignUp";
 import JobDetails from "../Pages/JobDetails/JobDetails";
 import AddJob from "../Pages/AddJob/AddJob";
+import MyBids from "../Pages/MyBids/MyBids";
+import MyPostedJobs from "../Pages/MyPostedJobs/MyPostedJobs";
+import BidRequests from "../Pages/BidRequests/BidRequests";
 
 const myRouter = createBrowserRouter([
   {
@@ -25,6 +28,18 @@ const myRouter = createBrowserRouter([
         {
             path : 'addJob', 
             element : <AddJob></AddJob>
+        },
+        {
+            path : 'myBids', 
+            element : <MyBids></MyBids>
+        },
+        {
+            path : 'myPostedJobs', 
+            element : <MyPostedJobs></MyPostedJobs>
+        },
+        {
+            path : 'bidRequest', 
+            element : <BidRequests></BidRequests>
         },
         {
             path : 'signIn', 
