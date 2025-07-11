@@ -1,5 +1,5 @@
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { useContext } from "react";
 import SocialShare from "./SocialShare";
@@ -9,8 +9,10 @@ import signUpImg from '../../assets/images/register.jpg'
 
 const SignUp = () => {
     const navigate = useNavigate()
-        const {user, createUser, updateUserProfile, setUser } = useContext(AuthContext)
-        const handleSignUp = async e => {
+    const location = useLocation();
+    const from = location.state || '/';
+    const {user, createUser, updateUserProfile, setUser } = useContext(AuthContext);
+    const handleSignUp = async e => {
         e.preventDefault();
         const form = e.target;
         const name = form.name.value;
@@ -23,7 +25,7 @@ const SignUp = () => {
         //    setUser({...user, photoURL : photo, displayName : name})
            setUser({...result?.user, photoURL : photo, displayName : name})
            alert('user successfully created')
-            navigate('/')
+            navigate(from, {replace : true})
 
         }catch (err) {console.log(err)}
     }

@@ -1,12 +1,10 @@
 
 const BidsRow = ({job, handleStatus}) => {
     const {job_title, deadline, price, category, status}  = job  || {}
-    console.log(job);
-
 
     return (
-  <tr>
-                            <td className='px-4 py-4 text-sm text-gray-500  whitespace-nowrap'>
+         <tr>
+            <td className='px-4 py-4 text-sm text-gray-500  whitespace-nowrap'>
                             {job_title}
                             </td>
 
@@ -20,8 +18,7 @@ const BidsRow = ({job, handleStatus}) => {
                             <td className='px-4 py-4 text-sm whitespace-nowrap'>
                             <div className='flex items-center gap-x-2'>
                                 <p
-                                className={`px-3 py-1 rounded-full text-xs ${job.category === 'Web Development' && ' text-blue-500 bg-blue-100/60 '} ${job.category === 'Graphics Design' && ' text-emerald-500 bg-emerald-100/60 '}${job.category === 'Digital Marketing' && ' text-pink-500 bg-pink-100/60 '}` } // Graphics Design
-                               
+                                className={`px-3 py-1 rounded-full text-xs ${job.category === 'Web Development' && ' text-blue-500 bg-blue-100/60 '} ${job.category === 'Graphics Design' && ' text-emerald-500 bg-emerald-100/60 '}${job.category === 'Digital Marketing' && ' text-pink-500 bg-pink-100/60 '}` }
                                 >
                                 {category}
                                 </p>

@@ -1,15 +1,17 @@
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SocialShare = () => {
     const {signInGoogle} = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state || '/'
     const handleGoogleLogin = ()=>{
         signInGoogle()
         .then(res => {
             console.log(res);
-            navigate("/")
+             navigate(from, {replace : true})
         })
         .catch(err => console.log(err))
     }

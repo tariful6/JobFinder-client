@@ -1,14 +1,29 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
+import axios from "axios";
+import BidsRow from "./BidsRow";
 
 const MyBids = () => {
     const [jobs, setJobs] = useState([])
     const [control, setControl] = useState(false);
     const {user} = useContext(AuthContext)
 
+    useEffect(()=>{
+        axios(`${import.meta.env.VITE_API_URL}/bids/${user.email}`)
+        .then(res => {
+            setJobs(res.data)
+            setControl(~control)
+        })
+    },[user, control])
+
 
     const handleStatus = (id) => {
-        console.log(id);    
+        axios.patch(`${import.meta.env.VITE_API_URL}/bids/${id}`, {status : 'Complete'})
+        .then(res => {
+            if(res.data.modifiedCount > 0){
+                alert('update successful')
+            }
+        })   
      }
 
     return (

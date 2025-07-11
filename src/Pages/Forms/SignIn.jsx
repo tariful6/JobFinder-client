@@ -1,14 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SocialShare from "./SocialShare";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 import loginimg from '../../assets/images/login.jpg'
 
 const SignIn = () => {
-    const {signInUser} = useContext(AuthContext)
+    const {signInUser, user, loading} = useContext(AuthContext)
         const navigate = useNavigate();
-
+        const location = useLocation();
+        const from = location.state || '/'
         const handleSignIn = async e => {
         e.preventDefault();
         const form = e.target;
@@ -17,11 +18,18 @@ const SignIn = () => {
         signInUser(email, password)
         .then(result => {
             console.log(result);
-            navigate('/')
+            navigate(from, {replace : true})
         })
         .catch(err => console.log(err))
-        
     }
+
+    useEffect(()=>{
+        if(user){
+            navigate('/')
+        }
+    },[navigate, user])
+
+    if(user || loading) return
     return (
         <div className='flex justify-center items-center min-h-[calc(100vh-306px)]'>
                     <div className='flex w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg  lg:max-w-4xl '>
