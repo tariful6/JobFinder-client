@@ -12,11 +12,19 @@ const MyPostedJobs = () => {
     useEffect(()=>{
         axios(`${import.meta.env.VITE_API_URL}/job/${user?.email}`)
         .then(res => setJobs(res.data))
-    },[user])
+    },[user, control])
  
 
     const handleDelete = id =>{
-        console.log(id);  
+        console.log(id); 
+        axios.delete(`${import.meta.env.VITE_API_URL}/job/${id}`) 
+        .then(res => {
+               if(res.data.deletedCount > 0){
+                  alert('deleted')
+                  setControl(!control)
+             }
+        })
+
     }
 
     return (
@@ -82,8 +90,6 @@ const MyPostedJobs = () => {
                         <tbody className='bg-white divide-y divide-gray-200 '>
                             {
                                 jobs.map(job => <JobTableRow key={job._id} job={job} handleDelete={handleDelete}></JobTableRow>)
-            
-                                // jobs.map(job => <JobTableRow key={job._id} job={job} handleDelete={handleDelete}></JobTableRow>)
                             }
                         </tbody>
                     </table>
