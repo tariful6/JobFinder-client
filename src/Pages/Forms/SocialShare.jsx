@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const SocialShare = () => {
     const {signInGoogle} = useContext(AuthContext);
@@ -10,8 +11,11 @@ const SocialShare = () => {
     const handleGoogleLogin = ()=>{
         signInGoogle()
         .then(res => {
-            console.log(res);
-             navigate(from, {replace : true})
+            axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {email : res?.user?.email}, {withCredentials : true})
+            .then(res => {
+                console.log(res.data);
+                navigate(from, {replace : true})
+            })
         })
         .catch(err => console.log(err))
     }

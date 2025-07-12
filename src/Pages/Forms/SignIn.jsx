@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 import loginimg from '../../assets/images/login.jpg'
+import axios from "axios";
 
 const SignIn = () => {
     const {signInUser, user, loading} = useContext(AuthContext)
@@ -17,8 +18,11 @@ const SignIn = () => {
         const password = form.password.value;
         signInUser(email, password)
         .then(result => {
-            console.log(result);
-            navigate(from, {replace : true})
+            axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {email : result?.user?.email}, {withCredentials : true})
+            .then(res => {
+                console.log(res.data);
+                navigate(from, {replace : true})
+            })
         })
         .catch(err => console.log(err))
     }

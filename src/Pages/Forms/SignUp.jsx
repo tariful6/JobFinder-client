@@ -5,6 +5,7 @@ import { useContext } from "react";
 import SocialShare from "./SocialShare";
 
 import signUpImg from '../../assets/images/register.jpg'
+import axios from "axios";
 
 
 const SignUp = () => {
@@ -24,9 +25,12 @@ const SignUp = () => {
            await  updateUserProfile(name, photo)
         //    setUser({...user, photoURL : photo, displayName : name})
            setUser({...result?.user, photoURL : photo, displayName : name})
-           alert('user successfully created')
-            navigate(from, {replace : true})
-
+           axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {email : result?.user?.email}, {withCredentials : true})
+            .then(res => {
+                alert(res.user ,' --- successfully created')
+                navigate(from, {replace : true})
+            })
+           
         }catch (err) {console.log(err)}
     }
 
