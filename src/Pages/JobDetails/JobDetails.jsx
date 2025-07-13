@@ -5,11 +5,13 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const JobDetails = () => {
     const {user} = useContext(AuthContext)
     const jobData = useLoaderData();
     const navigate = useNavigate();
+    const axiosSecure = useAxiosSecure()
     
     const [startDate, setStartDate] = useState(new Date());
     const {category, deadline, job_title, description, min_price, max_price, _id , buyer } = jobData || {}
@@ -39,12 +41,16 @@ const JobDetails = () => {
             email,
             buyer
         }
-        console.log(bidData);
-        axios.post(`${import.meta.env.VITE_API_URL}/bid`, bidData)
+        // console.log(bidData);
+        axiosSecure.post(`/bid`, bidData)
         .then(res => {
                 if(res.data.insertedId)
                 alert('successful')
                 navigate('/')
+        })
+        .catch(err => {
+            alert(err.response.data);
+            e.target.reset();
         })
     }
 
@@ -80,7 +86,7 @@ const JobDetails = () => {
                 </p>
                 </div>
                 <div className='rounded-full object-cover overflow-hidden w-14 h-14'>
-                <img src='' alt='' />
+                <img src={buyer?.photo} alt='' />
                 </div>
             </div>
             <p className='mt-6 text-lg font-bold text-gray-600 '>
