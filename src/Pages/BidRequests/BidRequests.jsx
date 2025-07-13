@@ -3,34 +3,77 @@ import { AuthContext } from "../../Provider/AuthProvider";
 import axios from "axios";
 import BidRequestRow from "./BidRequestRow";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const BidRequests = () => {
     const axiosSecure = useAxiosSecure()
-    const [bids, setBids] = useState([])
-    const [control, setControl] = useState(false);
     const {user} = useContext(AuthContext)
+    const queryClient = useQueryClient() // for invalidateQueries refetch. 
+    // const [bids, setBids] = useState([])  // used it for axios fetch.
+    // const [control, setControl] = useState(false); // used it for axios fetch.
 
-    useEffect(()=>{
-        axiosSecure(`/bid-request/${user.email}`)
-        .then(res => {
-            setBids(res.data)
-            setControl(!control)
-        })
-    },[user, control, axiosSecure])
+    // tanstack query for get data fetch option 1----------
+    const {data: bids = [], isLoading, refetch, isError, error} = useQuery({
+        queryFn : () => getData(),
+        queryKey : ['bids' , user?.email] // we can add here useEffect dependency --
+    })
+    console.log(bids);
+    console.log(isLoading);
+
+    const getData = async () => {
+        const {data} = await axiosSecure(`/bid-request/${user.email}`)
+        return data
+    }
+
+    // axios fetch data option 2---------------------
+    // useEffect(()=>{
+    //     axiosSecure(`/bid-request/${user.email}`)
+    //     .then(res => {
+    //         setBids(res.data)
+    //         setControl(!control)
+    //     })
+    // },[user, control, axiosSecure])
 
 
-    const handleUpdateStatus =  (id, prevStatus, status) =>{
+
+    // tanstack query for  patch data  option 1 ----------
+    // we also can use mutateAsync for post data ----------
+
+    const { mutateAsync} = useMutation({
+        mutationFn : async ({id, status}) => {
+           const {data} = await axiosSecure.patch(`/bids/${id}`, {status})
+           console.log(data); 
+        },
+        onSuccess : () => {
+             alert('update successful')
+            //  refetch() // invalidateQueries is a advance alternative of refetch. 
+            queryClient.invalidateQueries({queryKey : ['bids']})
+        }
+    })
+
+    const handleUpdateStatus =  async (id, prevStatus, status) =>{
         console.log(id, prevStatus, status);
-        if(prevStatus === status) return alert('sorry bhai')
-        axios.patch(`${import.meta.env.VITE_API_URL}/bids/${id}`, {status})
-        .then(res => {
-            if(res.data.modifiedCount > 0){
-                alert('update successful')
-            }
-        })
+        if(prevStatus === status) return alert('sorry bhai')``
+        await mutateAsync({id, status})
     }
 
 
+    // axios patch data option 2---------------------------------
+    // const handleUpdateStatus =  (id, prevStatus, status) =>{
+    //     console.log(id, prevStatus, status);
+    //     if(prevStatus === status) return alert('sorry bhai')
+
+    //     axios.patch(`${import.meta.env.VITE_API_URL}/bids/${id}`, {status})
+    //     .then(res => {
+    //         if(res.data.modifiedCount > 0){
+    //             alert('update successful')
+    //         }
+    //     })
+
+    // }
+
+    if(isLoading) return <p className=" text-green-400 text-3xl text-center">loading .....</p>
+  
     return (
         <div>
             <section className='container px-4 mx-auto pt-12'>
