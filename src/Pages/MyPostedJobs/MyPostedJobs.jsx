@@ -1,30 +1,31 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../Provider/AuthProvider";
+import { useEffect, useState } from "react";
 import JobTableRow from "./JobTableRow";
-import axios from "axios";
+import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const MyPostedJobs = () => {
-    const {user} = useContext(AuthContext);
+    const axiosSecure = useAxiosSecure()
+    const {user} = useAuth()
     const [jobs, setJobs] = useState([]);
     const [control, setControl] = useState(false);
 
+    // for fetch use include ----------------
     useEffect(()=>{
-        axios(`${import.meta.env.VITE_API_URL}/job/${user?.email}`)
-        .then(res => setJobs(res.data))
-    },[user, control])
+        axiosSecure(`/job/${user?.email}`)
+        .then(res => setJobs(res.data)) 
+    },[user, control, axiosSecure])
  
 
     const handleDelete = id =>{
         console.log(id); 
-        axios.delete(`${import.meta.env.VITE_API_URL}/job/${id}`) 
+        axiosSecure.delete(`/job/${id}`) 
         .then(res => {
                if(res.data.deletedCount > 0){
                   alert('deleted')
                   setControl(!control)
              }
         })
-
     }
 
     return (

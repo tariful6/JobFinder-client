@@ -2,19 +2,21 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import axios from "axios";
 import BidsRow from "./BidsRow";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MyBids = () => {
+    const axiosSecure = useAxiosSecure()
     const [jobs, setJobs] = useState([])
     const [control, setControl] = useState(false);
     const {user} = useContext(AuthContext)
 
     useEffect(()=>{
-        axios(`${import.meta.env.VITE_API_URL}/bids/${user.email}`)
+       axiosSecure(`/bids/${user.email}`)
         .then(res => {
             setJobs(res.data)
             setControl(~control)
         })
-    },[user, control])
+    },[user, control, axiosSecure])
 
 
     const handleStatus = (id) => {

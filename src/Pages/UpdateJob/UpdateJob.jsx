@@ -5,9 +5,11 @@ import { useContext, useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import axios from "axios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const UpdateJob = () => {
+    const axiosSecure = useAxiosSecure()
     const job = useLoaderData();
     const {user} = useContext(AuthContext)
     const {_id, job_title, buyer, category, deadline, description, max_price, min_price} = job || {}
@@ -37,7 +39,7 @@ const UpdateJob = () => {
                 photo : user?.photoURL,
             }
         }
-        axios.put(`${import.meta.env.VITE_API_URL}/job/${_id}`, jobData)
+        axiosSecure.put(`/job/${_id}`, jobData)
        .then(res => {
            if(res.data.modifiedCount > 0){
                alert('updated');
